@@ -57,8 +57,8 @@ wget -q -O- --no-check-certificate https://raw.githubusercontent.com/vagrant-sma
  | bash -s
 ```
 
-> If you install sudo, do not log out until you run the following step,
-> as your root password has changed.
+*If you install sudo, **do not log out** until you run the following step,
+as your root password has been changed.*
 
 Now run the following:
 
