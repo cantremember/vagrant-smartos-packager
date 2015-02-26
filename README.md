@@ -15,6 +15,12 @@ into which local zones can be installed with the vagrant plugin
 
 ## Usage
 
+To start from scratch, remove the tmp directory.
+
+```bash
+rm -rf tmp
+```
+
 Download the latest SmartOS platform image and turn it into
 a VirtualBox VM.
 
@@ -28,7 +34,8 @@ options. Set the root password to be `vagrant`.
 Now log in via ssh:
 
 ```bash
-ssh localhost -p 2222 -l root
+ssh localhost -p 2222 -l root \
+ -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
 ```
 
 ### Creating barebones global zone
@@ -42,6 +49,16 @@ This will install custom services that will load on boot, updating the
 image to ensure that users will persist between reboots. By default,
 everything except `/usbkey` and `/zones` and `/opt/custom` will reset
 between boots, so we have to do some tweaking.
+
+If sudo will be required in the global zone, run the following command:
+
+```bash
+wget -q -O- --no-check-certificate https://raw.githubusercontent.com/vagrant-smartos/vagrant-smartos-packager/master/bin/install_sudo \
+ | bash -s
+```
+
+> If you install sudo, do not log out until you run the following step,
+> as your root password has changed.
 
 Now run the following:
 
@@ -60,7 +77,6 @@ wget -q -O- --no-check-certificate https://raw.githubusercontent.com/vagrant-sma
  | bash -s
 ```
 
-
 ### Creating global zone with image imported
 
 If you are creating a box with an image already imported, instead of
@@ -69,14 +85,6 @@ the above instructions you can jump straight to:
 ```bash
 wget -q -O- --no-check-certificate https://raw.githubusercontent.com/vagrant-smartos/vagrant-smartos-packager/master/bin/prepare_for_lz \
   | bash -s [image_uuid]
-```
-
-### Installing sudo
-
-If sudo will be required in the global zone, run the following command:
-```bash
-wget -q -O- --no-check-certificate https://raw.githubusercontent.com/vagrant-smartos/vagrant-smartos-packager/master/bin/install_sudo \
- | bash -s
 ```
 
 ### Creating box
@@ -102,22 +110,16 @@ versioning to abstract away much of this detail.
 
 ## Vagrant configurations
 
-#### synced folders
+#### Synced Folders
 
-The SmartOS global zone mounts / as a ramdisk with a size of 262M. When
-using type `rsync`, to sync the local directory into the global zone,
-ensure that it is very lightweight.
+This topic is covered in more detail in [vagrant-smartos/vagrant-smartos-zones](https://github.com/vagrant-smartos/vagrant-smartos-zones#synced-folders)
+in terms of using 'rsync' and / or 'nfs' as your type.
 
-In order to use 'rsync' with a larger directory, you'll need to disable
-the normal mountpoint and create a new one on a persisted disk.
+For now, you'll need to disable the normal '/vagrant' mountpoint.
 
 ```ruby
-config.vm.synced_folder ".", "/zones/vagrant", type: "rsync"
 config.vm.synced_folder ".", "/vagrant", disabled: true
 ```
-
-Synced folders of type `nfs` will work, pending a pull request on
-Vagrant.
 
 ## Contributing
 

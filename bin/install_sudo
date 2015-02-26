@@ -7,11 +7,13 @@ svcadm disable -s persist-gz-files
 echo "*************************************************************"
 echo "Installing pkgin"
 if [[ -z "$(which pkg_admin | grep '/pkg_admin')" ]]; then
-  echo 1
+  echo "Installing pkgin"
   cd /
   wget -q -O- --no-check-certificate http://pkgsrc.joyent.com/packages/SmartOS/bootstrap/bootstrap-2014Q4-x86_64.tar.gz | gzcat | tar -xf -
   pkg_admin rebuild
 fi
+
+echo "Upgrading pkgin"
 pkgin -y up
 
 
