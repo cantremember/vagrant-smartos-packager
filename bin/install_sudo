@@ -8,7 +8,7 @@ echo "*************************************************************"
 echo "Installing pkgin"
 if [[ -z "$(which pkg_admin)" ]]; then
   cd /
-  wget -q -O- --no-check-certificate http://pkgsrc.joyent.com/packages/SmartOS/bootstrap/bootstrap-2013Q3-x86_64.tar.gz | gzcat | tar -xf -
+  wget -q -O- --no-check-certificate http://pkgsrc.joyent.com/packages/SmartOS/bootstrap/bootstrap-2014Q4-x86_64.tar.gz | gzcat | tar -xf -
   pkg_admin rebuild
 fi
 pkgin -y up
@@ -17,8 +17,8 @@ pkgin -y up
 echo "*************************************************************"
 echo "Installing sudo"
 pkgin -y install sudo
-echo "vagrant ALL=(ALL) NOPASSWD: ALL" >
-/opt/local/etc/sudoers.d/vagrant
+echo "vagrant ALL=(ALL) NOPASSWD: ALL" > \
+  /opt/local/etc/sudoers.d/vagrant
 chmod 0440 /opt/local/etc/sudoers.d/vagrant
 
 
